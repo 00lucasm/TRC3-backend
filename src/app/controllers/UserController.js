@@ -3,5 +3,5 @@ class UserController{
 		return res.json({ok: "online!"})
 	}
 }
-
+ 
 export default new UserController();
