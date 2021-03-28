@@ -20,7 +20,7 @@ function checkId(req, res, next){
 	return next()
 }
 
-const users = ["Andre"]
+const users = ["André", "Ayrton", "Flávio"]
 
 // CREATE
 server.post("/users", checkId, (req, res) => {
