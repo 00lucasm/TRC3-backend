@@ -1,6 +1,23 @@
+import User from "../models/User";
+
+// CRUD
 class UserController{
-	test(req, res){
-		return res.json({ok: "online!"})
+	// CREATE with POST method
+	async store(req, res){
+		const { name, email } = req.body;
+
+		if(!(name && email)){
+			return res.status(400).json({message: "Nome e email são obrigatórios"})
+		}
+
+		try{
+			const user = await User.create(req.body)
+
+			return res.status(201).json(user)
+
+		} catch (error){
+			return res.status(500).json({message: `Erro interno: ${error}`})
+		}
 	}
 }
  
