@@ -1,8 +1,8 @@
 import User from "../models/User";
 
-// CRUD
+//CRUD
 class UserController{
-	// CREATE with POST method
+	//CREATE with POST method
 	async store(req, res){
 		const { name, email } = req.body;
 
@@ -31,23 +31,50 @@ class UserController{
 		}
 	}
 
-	//UPDATE with PUT/PATCH method
+	//UPDATE with PUT method
 	async update(req, res){
+		const { id } = req.params;
+
+		if(!id){
+			return res.status(400).json({message: "id é obrigatório!"})
+		}
+
+		const user = await User.findOne({id: id})
+		console.log(id)
+
+		if(!user){
+			return res.status(404).json({message: "User not found!"})
+		}
+
+		/*
+		const { name, email, age } = req.body
+		const user_updated = { name, email, age }
+		*/
+
 		try{
-			const { id } = req.params;
-			const user = await User.findOne({ id })
-			if(!user){
-				return res.status(400).json({message: "user not found!"})
+			await User.updateOne(req.body).where({id: id})
+
+			return res.status(201).json({message: "Usuário atualizado com sucesso!"})
+		}catch (error){
+			return res.status(500).json({message: `Erro interno ${error}`})
+		}	
+	}
+
+	//DELETE with DELETE method
+	async delete(req, res){
+		try{
+			const userToDelete = await User.findOne({ id: req.params.id })
+
+			if(!userToDelete){
+				return res.status(404).json({message: `Usuário ${req.params.id} não foi encontrado.`})
 			}
 
-			const { name, email } = req.body
-			const user_updated = { name, email }
-			await User.update(user_updated)
-			return res.status(201).json(user_updated)
+			await User.deleteOne({ id: req.params.id })
+
+			return res.json({message: "Usuário removido."})
 		}catch(error){
-			return res.status(500).json({message: `Erro interno: ${error}`})
+			return res.status(500).json({message: `Erro interno ${error}`})
 		}
-		
 	}
 }
  
