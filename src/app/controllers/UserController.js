@@ -40,7 +40,6 @@ class UserController{
 		}
 
 		const user = await User.findOne({id: id})
-		console.log(id)
 
 		if(!user){
 			return res.status(404).json({message: "User not found!"})
